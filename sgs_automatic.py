@@ -5,7 +5,8 @@ import pygetwindow as gw
 import pyautogui
 import cv2
 import numpy as np
-
+from tqdm import tqdm
+import argparse
 
 window_x, window_y = 0, 0
 speed_lock = threading.Lock()   # 判断速率锁
@@ -22,24 +23,24 @@ old_speed = 0.18  # 需要慢下来的点击速率
 ti_gan_time = 5.92  # 提杆后，过多少秒就是开钓鱼 这个最好是以加大时间调整,最低时间为5，在往下调,会出bug
 # 上方值都是由,本人电脑配置，最佳参数值，若有不一致，可小幅度调整
 
-loop_num = 39    # 为你本次某个鱼饵的数量，填写几个就循环钓鱼几次
+loop_num = 17    # 为你本次某个鱼饵的数量，填写几个就循环钓鱼几次
 ld_height = 35  # 1920*1080分辨率为35 4k分辨率为51 大家根据用微信截图测试一下,自己雷电模拟器上方黑条高度需要填写
 # 上
-i_up = r'E:\code\python3.10\code\sgs_image\01_up.png'
+i_up = r'./sgs_image/01_up.png'
 # 左
-i_left = r'E:\code\python3.10\code\sgs_image\02_left.png'
+i_left = r'./sgs_image/02_left.png'
 # 下
-i_un = r'E:\code\python3.10\code\sgs_image\03_un.png'
+i_un = r'./sgs_image/03_un.png'
 # 右
-i_right = r'E:\code\python3.10\code\sgs_image\04_right.png'
+i_right = r'./sgs_image/04_right.png'
 # 风
-i_wind = r'E:\code\python3.10\code\sgs_image\05_wind.png'
+i_wind = r'./sgs_image/05_wind.png'
 # 火
-i_fire = r'E:\code\python3.10\code\sgs_image\06_fire.png'
+i_fire = r'./sgs_image/06_fire.png'
 # 雷
-i_ray = r'E:\code\python3.10\code\sgs_image\07_ray.png'
+i_ray = r'./sgs_image/07_ray.png'
 # 电
-i_electricity = r'E:\code\python3.10\code\sgs_image\08_electricity.png'
+i_electricity = r'./sgs_image/08_electricity.png'
 
 def check_color_range(color, range_value, target):
     """
@@ -227,7 +228,7 @@ def get_image_exist(yuan_path, cut_position, threshold):
 
 
 # 钓鱼
-def go_fish():
+def go_fish(loop_num):
     time.sleep(2)
     # Step 4: 点击开始钓鱼
     # subprocess.run(['adb', '-s', device, 'shell', 'input', 'tap',
@@ -242,7 +243,7 @@ def go_fish():
     thread.start()
     thread1.start()
     global son_threa_run
-    for _ in range(loop_num):
+    for _ in tqdm(range(loop_num)):
         global last_gan_time
         last_gan_time = 0
         # Step 5: 抛竿
@@ -261,7 +262,7 @@ def go_fish():
         # 释放鼠标左键
         pyautogui.mouseUp(button='left')
         son_threa_run = True
-        print("看看线程执行了几次")
+        # print("看看线程执行了几次")
         while True:
             with gan_lock:
                 current_gan = is_ti_gan
@@ -291,7 +292,7 @@ def go_fish():
                         click_matching_tags(coord.five_tag_x)
                     break
                 elif current_status == 2:
-                    print("结束本次钓鱼了")
+                    # print("结束本次钓鱼了")
                     break
                 else:
                     if last_gan_time != 0 :
@@ -302,7 +303,7 @@ def go_fish():
                         pyautogui.dragTo(window_x + coord.start_fish['x'],
                                          window_y + coord.start_fish['y'] + ld_height - 100, duration=0.2)
                         last_gan_time = time.time()
-                        print("看连续拉了几次杆")
+                        # print("看连续拉了几次杆")
                         # time.sleep(0.6)
                     else:
                         pyautogui.click(window_x + coord.start_fish['x'], window_y + coord.start_fish['y'] + ld_height)
@@ -312,7 +313,6 @@ def go_fish():
 
         time.sleep(8)
         son_threa_run = False
-        # 点击在钓一次
         # subprocess.run(['adb', '-s', device, 'shell', 'input', 'tap',
         #                 str(coord.again_fish['x']), str(coord.again_fish['y'])], check=True)
         pyautogui.click(window_x+coord.again_fish['x'], window_y+coord.again_fish['y']+ld_height)
@@ -320,13 +320,14 @@ def go_fish():
 
 
 def all_flow():
+    time.sleep(3)
     game_window = gw.getWindowsWithTitle('雷电模拟器')[0]  # 替换为实际的游戏窗口标题
     # 获取窗口位置
     global window_x
     window_x = game_window.left
     global window_y
     window_y = game_window.top
-    go_fish()
+    go_fish(loop_num=args.number)
 
 
 def main():
@@ -334,5 +335,9 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--number', default=1, type=int)
+    args = parser.parse_args()
+
     main()
 
