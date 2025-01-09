@@ -74,42 +74,42 @@ def click_matching_tags(arr):
             'height': 110
         }
         temp_x, temp_y = get_image_exist(i_up,
-                                         cut_cor, 0.9)
+                                         cut_cor, 0.8)
         if temp_x != -1 and temp_y != -1:
             temp_arr.append(coord.up)
             continue
         temp_x, temp_y = get_image_exist(i_left,
-                                         cut_cor, 0.9)
+                                         cut_cor, 0.8)
         if temp_x != -1 and temp_y != -1:
             temp_arr.append(coord.left)
             continue
         temp_x, temp_y = get_image_exist(i_un,
-                                         cut_cor, 0.9)
+                                         cut_cor, 0.8)
         if temp_x != -1 and temp_y != -1:
             temp_arr.append(coord.un)
             continue
         temp_x, temp_y = get_image_exist(i_right,
-                                         cut_cor, 0.9)
+                                         cut_cor, 0.8)
         if temp_x != -1 and temp_y != -1:
             temp_arr.append(coord.right)
             continue
         temp_x, temp_y = get_image_exist(i_wind,
-                                         cut_cor, 0.9)
+                                         cut_cor, 0.8)
         if temp_x != -1 and temp_y != -1:
             temp_arr.append(coord.wind)
             continue
         temp_x, temp_y = get_image_exist(i_fire,
-                                         cut_cor, 0.9)
+                                         cut_cor, 0.8)
         if temp_x != -1 and temp_y != -1:
             temp_arr.append(coord.fire)
             continue
         temp_x, temp_y = get_image_exist(i_ray,
-                                         cut_cor, 0.9)
+                                         cut_cor, 0.8)
         if temp_x != -1 and temp_y != -1:
             temp_arr.append(coord.ray)
             continue
         temp_x, temp_y = get_image_exist(i_electricity,
-                                         cut_cor, 0.9)
+                                         cut_cor, 0.8)
         if temp_x != -1 and temp_y != -1:
             temp_arr.append(coord.electricity)
     for data in temp_arr:
@@ -327,7 +327,7 @@ def all_flow():
     window_x = game_window.left
     global window_y
     window_y = game_window.top
-    go_fish(loop_num=args.number)
+    go_fish(loop_num=args.num)
 
 
 def main():
@@ -336,7 +336,7 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--number', default=1, type=int)
+    parser.add_argument('--num', default=1, type=int)
     args = parser.parse_args()
 
     main()
